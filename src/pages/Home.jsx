@@ -69,6 +69,8 @@ function Home() {
     if (currentSlotIndex < slots.length - 1) {
       setCurrentSlotIndex(currentSlotIndex + 1);
     }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function rerollCurrentSlot() {
@@ -110,16 +112,42 @@ function Home() {
           <div className="hero-content">
             <p className="eyebrow">Welcome to</p>
             <h1>Best Film Festival</h1>
-            <p className="hero-text">
-              Build the ultimate movie lineup by matching genres, decades, and
-              legendary films into one unforgettable festival.
-            </p>
+            <p className="intro-text">
+            Select the greatest films across 11 genres and decades dating back to the 1970s. With every choice, you'll build a one-of-a-kind film festival and discover how your lineup stacks up against the best.
+</p>
 
+<p className="intro-text intro-challenge">
+  Can you create the best film festival?
+</p>
             <button className="start-button" onClick={beginFestival}>
               Begin Festival
             </button>
           </div>
         </section>
+        <section className="tmdb-credit">
+  <div className="tmdb-credit-content">
+    <div className="tmdb-credit-image">
+      <img
+        src="src/assets/tmdb-logo.svg"
+        alt="The Movie Database Logo"
+      />
+    </div>
+
+    <div className="tmdb-credit-text">
+      <h2>Powered by The Movie Database</h2>
+
+      <p>
+        Movie information, posters, ratings, release dates, and other film
+        data used throughout Best Film Festival are provided by
+        The Movie Database (TMDb).
+      </p>
+
+      <p>
+        This product uses the TMDb API but is not endorsed or certified by TMDb.
+      </p>
+    </div>
+  </div>
+</section>
       </main>
     );
   }
@@ -131,6 +159,12 @@ function Home() {
           <p className="eyebrow">Festival Complete</p>
           <h1>Your Final Lineup</h1>
           <h2>Festival Score: {festivalScore}</h2>
+
+          <h3>How to improve your festival</h3>
+<p>
+  Pick films with higher TMDb ratings, use rerolls wisely, and look for movies that
+  balance critical rating with audience popularity.
+</p>
 
           <div className="lineup-list">
             {picks.map((pick) => (
@@ -176,7 +210,7 @@ function Home() {
     onClick={rerollCurrentSlot}
     disabled={rerollsRemaining === 0 || loading}
   >
-    🎟 Reroll ({rerollsRemaining})
+    🎟 Reroll
   </button>
 </div>
 
