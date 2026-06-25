@@ -401,3 +401,65 @@ h2,
     opacity: 0.4;
     cursor: not-allowed;
   }
+
+  .results-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .results-actions .share-btn,
+  .results-actions .start-button {
+    margin-top: 0;
+  }
+
+  /* Share Button */
+  .share-btn {
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.4rem;
+    border: none;
+    border-radius: 999px;
+    background: #f5c542;
+    color: #111;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 18px rgba(245, 197, 66, 0.35);
+  }
+  
+  .share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(245, 197, 66, 0.55);
+  }
+  .score-box {
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+    max-width: 320px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  
+  .score-label {
+    margin: 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  
+  .score-box h2 {
+    margin: 0.25rem 0 0;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+  }
+  
+  .score-explainer {
+    max-width: 650px;
+    margin: 1.5rem auto;
+  }
+  
+  .score-explainer p {
+    line-height: 1.6;
+  }

@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getMoviesByGenreAndDecade } from "../api/tmdb";
 import { getRandomFestivalSlots } from "../data/festivalCategories";
 import MovieCard from "../components/MovieCard";
+import tmdbLogo from "../assets/tmdb-logo.svg";
 import "./Home.css";
 
 function Home() {
+  const navigate = useNavigate();
+
   const [gameStarted, setGameStarted] = useState(false);
   const [slots, setSlots] = useState([]);
   const [currentSlotIndex, setCurrentSlotIndex] = useState(0);
@@ -15,7 +19,6 @@ function Home() {
   const [rerollsRemaining, setRerollsRemaining] = useState(2);
 
   const currentSlot = slots[currentSlotIndex];
-  const isComplete = picks.length === slots.length && slots.length > 0;
 
   function beginFestival() {
     const newSlots = getRandomFestivalSlots();
@@ -68,6 +71,12 @@ function Home() {
 
     if (currentSlotIndex < slots.length - 1) {
       setCurrentSlotIndex(currentSlotIndex + 1);
+    } else {
+      navigate("/results", {
+        state: {
+          picks: updatedPicks,
+        },
+      });
     }
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -98,10 +107,6 @@ function Home() {
     setRerollsRemaining((current) => current - 1);
   }
 
-  const festivalScore = picks.reduce((total, pick) => {
-    return total + Math.round(pick.movie.vote_average * 10);
-  }, 0);
-
   if (!gameStarted) {
     return (
       <main className="home-page">
@@ -112,74 +117,45 @@ function Home() {
           <div className="hero-content">
             <p className="eyebrow">Welcome to</p>
             <h1>Best Film Festival</h1>
-            <p className="intro-text">
-            Select the greatest films across 11 genres and decades dating back to the 1970s. With every choice, you'll build a one-of-a-kind film festival and discover how your lineup stacks up against the best.
-</p>
 
-<p className="intro-text intro-challenge">
-  Can you create the best film festival?
-</p>
+            <p className="intro-text">
+              Select the greatest films across 11 genres and decades dating
+              back to the 1970s. With every choice, you'll build a one-of-a-kind
+              film festival and discover how your lineup stacks up against the
+              best.
+            </p>
+
+            <p className="intro-text intro-challenge">
+              Can you create the best film festival?
+            </p>
+
             <button className="start-button" onClick={beginFestival}>
               Begin Festival
             </button>
           </div>
         </section>
+
         <section className="tmdb-credit">
-  <div className="tmdb-credit-content">
-    <div className="tmdb-credit-image">
-      <img
-        src="src/assets/tmdb-logo.svg"
-        alt="The Movie Database Logo"
-      />
-    </div>
+          <div className="tmdb-credit-content">
+            <div className="tmdb-credit-image">
+              <img src={tmdbLogo} alt="The Movie Database Logo" />
+            </div>
 
-    <div className="tmdb-credit-text">
-      <h2>Powered by The Movie Database</h2>
+            <div className="tmdb-credit-text">
+              <h2>Powered by The Movie Database</h2>
 
-      <p>
-        Movie information, posters, ratings, release dates, and other film
-        data used throughout Best Film Festival are provided by
-        The Movie Database (TMDb).
-      </p>
+              <p>
+                Movie information, posters, ratings, release dates, and other
+                film data used throughout Best Film Festival are provided by The
+                Movie Database (TMDb).
+              </p>
 
-      <p>
-        This product uses the TMDb API but is not endorsed or certified by TMDb.
-      </p>
-    </div>
-  </div>
-</section>
-      </main>
-    );
-  }
-
-  if (isComplete) {
-    return (
-      <main className="game-page">
-        <section className="results-panel">
-          <p className="eyebrow">Festival Complete</p>
-          <h1>Your Final Lineup</h1>
-          <h2>Festival Score: {festivalScore}</h2>
-
-          <h3>How to improve your festival</h3>
-<p>
-  Pick films with higher TMDb ratings, use rerolls wisely, and look for movies that
-  balance critical rating with audience popularity.
-</p>
-
-          <div className="lineup-list">
-            {picks.map((pick) => (
-              <article key={`${pick.slot.id}-${pick.movie.id}`} className="lineup-card">
-                <span>
-                  {pick.slot.genre.name} · {pick.slot.decade.label}
-                </span>
-                <strong>{pick.movie.title}</strong>
-              </article>
-            ))}
+              <p>
+                This product uses the TMDb API but is not endorsed or certified
+                by TMDb.
+              </p>
+            </div>
           </div>
-
-          <button className="start-button" onClick={beginFestival}>
-            Build Another Festival
-          </button>
         </section>
       </main>
     );
@@ -205,41 +181,42 @@ function Home() {
         </p>
 
         <div className="reroll-container">
-  <button
-    className="reroll-button"
-    onClick={rerollCurrentSlot}
-    disabled={rerollsRemaining === 0 || loading}
-  >
-    🎟 Reroll
-  </button>
-</div>
+          <button
+            className="reroll-button"
+            onClick={rerollCurrentSlot}
+            disabled={rerollsRemaining === 0 || loading}
+          >
+            🎟 Reroll
+          </button>
+        </div>
 
-{loading ? (
-  <p className="loading-text">Loading movie options...</p>
-) : (
-  <div className="movie-grid">
-    {movieOptions.map((movie) => (
-      <MovieCard
-        key={movie.id}
-        movie={movie}
-        isSelected={selectedMovie?.id === movie.id}
-        onSelect={() => setSelectedMovie(movie)}
-      />
-    ))}
-  </div>
-)}
+        {loading ? (
+          <p className="loading-text">Loading movie options...</p>
+        ) : (
+          <div className="movie-grid">
+            {movieOptions.map((movie) => (
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                isSelected={selectedMovie?.id === movie.id}
+                onSelect={() => setSelectedMovie(movie)}
+              />
+            ))}
+          </div>
+        )}
 
-<div className="festival-buttons">
-  <button
-    className="start-button"
-    onClick={confirmPick}
-    disabled={!selectedMovie}
-  >
-    Confirm Pick
-  </button>
-</div>
-</section>          
+        <div className="festival-buttons">
+          <button
+            className="start-button"
+            onClick={confirmPick}
+            disabled={!selectedMovie}
+          >
+            Confirm Pick
+          </button>
+        </div>
+      </section>
     </main>
-  );    
-} 
+  );
+}
+
 export default Home;
