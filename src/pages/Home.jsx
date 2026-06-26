@@ -129,9 +129,14 @@ function Home() {
               Can you create the best film festival?
             </p>
 
-            <button className="start-button" onClick={beginFestival}>
-              Begin Festival
-            </button>
+            <button className="clapper-btn" onClick={beginFestival}>
+  <span className="clapper-top"></span>
+
+  <span className="clapper-body">
+    <small>TAKE ONE</small>
+    <strong>BEGIN FESTIVAL</strong>
+  </span>
+</button>
           </div>
         </section>
 
@@ -194,26 +199,31 @@ function Home() {
           <p className="loading-text">Loading movie options...</p>
         ) : (
           <div className="movie-grid">
-            {movieOptions.map((movie) => (
+          {movieOptions.map((movie) => (
+            <div
+              key={movie.id}
+              className={`movie-option ${
+                selectedMovie?.id === movie.id ? "selected" : ""
+              }`}
+            >
               <MovieCard
-                key={movie.id}
                 movie={movie}
                 isSelected={selectedMovie?.id === movie.id}
                 onSelect={() => setSelectedMovie(movie)}
               />
-            ))}
-          </div>
-        )}
-
-        <div className="festival-buttons">
-          <button
-            className="start-button"
-            onClick={confirmPick}
-            disabled={!selectedMovie}
-          >
-            Confirm Pick
-          </button>
+        
+              {selectedMovie?.id === movie.id && (
+                <button
+                  className="inline-confirm-button"
+                  onClick={confirmPick}
+                >
+                  Confirm Pick
+                </button>
+              )}
+            </div>
+          ))}
         </div>
+        )}
       </section>
     </main>
   );

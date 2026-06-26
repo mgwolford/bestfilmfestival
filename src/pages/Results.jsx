@@ -6,11 +6,20 @@ function Results() {
   const picks = location.state?.picks || [];
 
   const averageRating =
-    picks.reduce((total, pick) => total + pick.movie.vote_average, 0) /
-    picks.length;
+  picks.reduce((sum, pick) => sum + pick.movie.vote_average, 0) /
+  picks.length;
 
-  const festivalScore = Math.round(averageRating * 10);
+const averagePopularity =
+  picks.reduce((sum, pick) => sum + pick.movie.popularity, 0) /
+  picks.length;
 
+// Normalize popularity (adjust divisor after testing)
+const popularityScore = Math.min(100, averagePopularity / 10);
+
+const festivalScore = Math.round(
+  averageRating * 10 * 0.90 +
+  popularityScore * 0.10
+);
   async function handleShare() {
     const shareText = `I built a ${festivalScore}/100 film festival on Best Film Festival. Can you beat my lineup?`;
     const shareUrl = "https://mgwolford.github.io/bestfilmfestival/";
@@ -59,12 +68,10 @@ function Results() {
 </div>
 
 <div className="score-explainer">
-  <h3>What your score means</h3>
+  <h3>How the judges scored your festival</h3>
 
   <p>
-    Your festival score is based on the average TMDb rating of the movies in
-    your final lineup. A higher score means your festival is packed with movies
-    that audiences and critics rated more highly.
+  Our panel looked at the overall quality of your selections and how well they've resonated with audiences over time. A festival filled with acclaimed classics and beloved crowd-pleasers will earn the highest ratings.
   </p>
 </div>
 

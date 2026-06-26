@@ -121,20 +121,18 @@ h2,
   
   .hero-text {
     max-width: 620px;
-    margin: 24px auto;
+    margin: 16px auto;
     color: #d9cfb9;
     font-size: clamp(1rem, 2vw, 1.2rem);
     line-height: 1.7;
   }
   
-  .start-button {
+  .start-button,
+  .share-btn {
     display: inline-block;
-    margin-top: 34px;
     padding: 14px 28px;
     border: 1px solid #f5c46b;
     border-radius: 999px;
-    background: #f5c46b;
-    color: #111;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -143,20 +141,39 @@ h2,
     transition:
       transform 0.2s ease,
       box-shadow 0.2s ease,
-      background 0.2s ease;
+      background 0.2s ease,
+      color 0.2s ease;
   }
-  
-  .start-button:hover {
+
+  .start-button {
+    margin-top: 34px;
+    background: #f5c46b;
+    color: #111;
+  }
+
+  .start-button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 0 28px rgba(245, 196, 107, 0.35);
     background: #ffd985;
   }
-  
+
   .start-button:disabled {
     opacity: 0.45;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+  }
+
+  .share-btn {
+    background: #000;
+    color: #f5c46b;
+  }
+
+  .share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(245, 196, 107, 0.35);
+    background: rgba(245, 196, 107, 0.12);
+    color: #ffd985;
   }
   
 
@@ -219,7 +236,7 @@ h2,
   /* Game Page */
   .game-page {
     min-height: 100vh;
-    padding: 48px 24px;
+    padding: 40px 24px;
     background:
       radial-gradient(circle at bottom left, rgba(245, 196, 107, 0.16), transparent 32%),
       radial-gradient(circle at bottom right, rgba(245, 196, 107, 0.12), transparent 32%),
@@ -249,9 +266,15 @@ h2,
   
   .movie-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin: 40px auto 32px;
+    grid-template-columns: repeat(2, minmax(0, 150px));
+    justify-content: center;
+    gap: 3rem;
+  }
+  
+  @media (min-width: 700px) {
+    .movie-grid {
+      grid-template-columns: repeat(4, minmax(0, 170px));
+    }
   }
   
   .movie-card {
@@ -262,37 +285,29 @@ h2,
     overflow: hidden;
     cursor: pointer;
     text-align: left;
-    transition:
-      transform 0.2s ease,
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-  
-  .movie-card:hover {
-    transform: translateY(-3px);
-    border-color: #f5c46b;
-  }
-  
-  .movie-card.selected {
-    border-color: #f5c46b;
-    box-shadow: 0 0 28px rgba(245, 196, 107, 0.3);
   }
   
   .movie-card img {
     width: 100%;
-    height: 160px;
+    aspect-ratio: 2 / 3;
+    height: auto;
     object-fit: cover;
     display: block;
   }
   
   .movie-card-content {
-    padding: 10px;
+    padding: 10px 0px;
   }
   
   .movie-card-content h3 {
-    margin: 0 0 4px;
-    font-size: 0.95rem;
-    line-height: 1.3;
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    line-height: 1.25;
+    min-height: 3em;  
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   
   .movie-card-content p {
@@ -384,7 +399,8 @@ h2,
   }
   
   .reroll-button {
-    padding: 14px 24px;
+    padding: 14px 40px;
+    margin-bottom: 20px;
     border: 1px solid #555;
     border-radius: 999px;
     background: #222;
@@ -415,24 +431,6 @@ h2,
     margin-top: 0;
   }
 
-  /* Share Button */
-  .share-btn {
-    margin-top: 1.5rem;
-    padding: 0.85rem 1.4rem;
-    border: none;
-    border-radius: 999px;
-    background: #f5c542;
-    color: #111;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 0 18px rgba(245, 197, 66, 0.35);
-  }
-  
-  .share-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 24px rgba(245, 197, 66, 0.55);
-  }
   .score-box {
     margin: 1.5rem auto;
     padding: 1.25rem;
@@ -462,4 +460,101 @@ h2,
   
   .score-explainer p {
     line-height: 1.6;
+  }
+
+  .movie-option {
+    width: 100%;
+  }
+  
+  .inline-confirm-button {
+    width: 95%;
+    margin-top: 0.75rem;
+    padding: 0.85rem 1rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* smaller mobile posters */
+
+    .movie-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+  
+  
+  @media (min-width: 700px) {
+    .movie-grid img {
+      max-height: 360px;
+    }
+  }
+
+  .clapper-btn {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: transform .2s ease;
+    margin-top: 24px;
+  }
+  
+  .clapper-btn:hover {
+    transform: translateY(-4px);
+  }
+  
+  .clapper-top {
+    width: 300px;
+    height: 38px;
+    border: 3px solid #fff;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        #fff 0px,
+        #fff 14px,
+        #000 14px,
+        #000 28px
+      );
+    transform-origin: left center;
+    transition: transform .25s ease;
+  }
+  
+  .clapper-btn:hover .clapper-top {
+    transform: rotate(-8deg);
+  }
+  
+  .clapper-body {
+    width: 260px;
+    padding: 22px 20px;
+    background: #151515;
+    border: 3px solid #fff;
+    border-radius: 0 0 12px 12px;
+    color: #f8f1df;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .clapper-body small {
+    color: #999;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    font-size: .72rem;
+  }
+  
+  .clapper-body strong {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+  }
+  
+  .clapper-btn:hover .clapper-body {
+    border-color: #f5c46b;
+    box-shadow: 0 0 25px rgba(245,196,107,.35);
   }
