@@ -45,8 +45,17 @@ function Home() {
           startYear: currentSlot.decade.startYear,
           endYear: currentSlot.decade.endYear,
         });
-
-        setMovieOptions(movies.slice(0, 8));
+        
+        const primaryGenreMovies = movies.filter(
+          (movie) => movie.genre_ids?.[0] === currentSlot.genre.id
+        );
+        
+        const moviesToShow =
+          primaryGenreMovies.length >= 8
+            ? primaryGenreMovies.slice(0, 8)
+            : movies.slice(0, 8);
+        
+        setMovieOptions(moviesToShow);
       } catch (error) {
         console.error(error);
         setMovieOptions([]);
