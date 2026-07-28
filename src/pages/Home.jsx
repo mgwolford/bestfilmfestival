@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMoviesByGenreAndDecade } from "../api/tmdb";
 import { getRandomFestivalSlots } from "../data/festivalCategories";
@@ -17,6 +17,7 @@ function Home() {
   const [picks, setPicks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [rerollsRemaining, setRerollsRemaining] = useState(2);
+  const offeredMovieIds = useRef(new Set());
 
   const currentSlot = slots[currentSlotIndex];
 
@@ -29,6 +30,7 @@ function Home() {
     setSelectedMovie(null);
     setMovieOptions([]);
     setRerollsRemaining(2);
+    offeredMovieIds.current = new Set();
     setGameStarted(true);
   }
 
@@ -44,17 +46,37 @@ function Home() {
           genreId: currentSlot.genre.id,
           startYear: currentSlot.decade.startYear,
           endYear: currentSlot.decade.endYear,
+          excludeMovieIds: [...offeredMovieIds.current],
         });
-        
+
         const primaryGenreMovies = movies.filter(
           (movie) => movie.genre_ids?.[0] === currentSlot.genre.id
         );
-        
-        const moviesToShow =
-          primaryGenreMovies.length >= 8
-            ? primaryGenreMovies.slice(0, 8)
-            : movies.slice(0, 8);
-        
+
+        const otherGenreMovies = movies.filter(
+          (movie) => movie.genre_ids?.[0] !== currentSlot.genre.id
+        );
+
+        const moviesToShow = [
+          ...primaryGenreMovies.slice(0, 6),
+          ...otherGenreMovies.slice(0, 2),
+        ];
+
+        if (moviesToShow.length < 8) {
+          const selectedIds = new Set(moviesToShow.map((movie) => movie.id));
+          const remainingMovies = movies.filter(
+            (movie) => !selectedIds.has(movie.id)
+          );
+
+          moviesToShow.push(
+            ...remainingMovies.slice(0, 8 - moviesToShow.length)
+          );
+        }
+
+        moviesToShow.forEach((movie) =>
+          offeredMovieIds.current.add(movie.id)
+        );
+
         setMovieOptions(moviesToShow);
       } catch (error) {
         console.error(error);

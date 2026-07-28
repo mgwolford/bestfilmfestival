@@ -5,21 +5,66 @@ function Results() {
   const location = useLocation();
   const picks = location.state?.picks || [];
 
+  if (picks.length === 0) {
+    return (
+      <main className="game-page">
+        <section className="results-panel">
+          <h1>No Festival Found</h1>
+          <p>Start a new festival to build your lineup.</p>
+
+          <Link to="/" className="start-button">
+            Start Festival
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
   const averageRating =
-  picks.reduce((sum, pick) => sum + pick.movie.vote_average, 0) /
-  picks.length;
+    picks.reduce((sum, pick) => sum + pick.movie.vote_average, 0) /
+    picks.length;
 
-const averagePopularity =
-  picks.reduce((sum, pick) => sum + pick.movie.popularity, 0) /
-  picks.length;
+  const averagePopularity =
+    picks.reduce((sum, pick) => sum + pick.movie.popularity, 0) /
+    picks.length;
 
-// Normalize popularity (adjust divisor after testing)
-const popularityScore = Math.min(100, averagePopularity / 10);
+  const ratingBenchmarks = [
+    { rating: 0, score: 0 },
+    { rating: 4, score: 40 },
+    { rating: 5, score: 55 },
+    { rating: 6, score: 68 },
+    { rating: 7, score: 80 },
+    { rating: 8, score: 90 },
+    { rating: 9, score: 97 },
+    { rating: 10, score: 100 },
+  ];
 
-const festivalScore = Math.round(
-  averageRating * 10 * 0.90 +
-  popularityScore * 0.10
-);
+  function getRatingScore(rating) {
+    const upperIndex = ratingBenchmarks.findIndex(
+      (benchmark) => rating <= benchmark.rating
+    );
+
+    if (upperIndex <= 0) {
+      return ratingBenchmarks[0].score;
+    }
+
+    const lower = ratingBenchmarks[upperIndex - 1];
+    const upper = ratingBenchmarks[upperIndex];
+    const progress = (rating - lower.rating) / (upper.rating - lower.rating);
+
+    return lower.score + progress * (upper.score - lower.score);
+  }
+
+  const ratingScore = getRatingScore(averageRating);
+  const popularityScore = Math.min(
+    100,
+    (Math.log10(averagePopularity + 1) / Math.log10(1001)) * 100
+  );
+
+  const festivalScore = Math.round(
+    ratingScore * 0.9 + popularityScore * 0.1
+  );
+
   async function handleShare() {
     const shareText = `I built a ${festivalScore}/100 film festival on Best Film Festival. Can you beat my lineup?`;
     const shareUrl = "https://mgwolford.github.io/bestfilmfestival/";
@@ -40,21 +85,6 @@ const festivalScore = Math.round(
     } catch (error) {
       console.log("Share canceled or failed", error);
     }
-  }
-
-  if (picks.length === 0) {
-    return (
-      <main className="game-page">
-        <section className="results-panel">
-          <h1>No Festival Found</h1>
-          <p>Start a new festival to build your lineup.</p>
-
-          <Link to="/" className="start-button">
-            Start Festival
-          </Link>
-        </section>
-      </main>
-    );
   }
 
   return (
