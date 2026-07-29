@@ -1,6 +1,62 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Home.css";
 
+function getFestivalAward(score) {
+  if (score === 100) {
+    return {
+      level: "perfect",
+      title: "Perfect Festival",
+      message: "A flawless lineup. Cinema may have peaked.",
+    };
+  }
+
+  if (score >= 90) {
+    return {
+      level: "masterpiece",
+      title: "Festival Masterpiece",
+      message: "An extraordinary festival worthy of the red carpet.",
+    };
+  }
+
+  if (score >= 80) {
+    return {
+      level: "winner",
+      title: "Grand Jury Winner",
+      message: "A prestigious lineup from beginning to end.",
+    };
+  }
+
+  if (score >= 70) {
+    return {
+      level: "finalist",
+      title: "Festival Finalist",
+      message: "A strong festival with serious awards potential.",
+    };
+  }
+
+  if (score >= 60) {
+    return {
+      level: "critics-choice",
+      title: "Critics’ Choice",
+      message: "A smart lineup that gives film lovers plenty to discuss.",
+    };
+  }
+
+  if (score >= 50) {
+    return {
+      level: "audience-favorite",
+      title: "Audience Favorite",
+      message: "A crowd-pleasing festival with plenty of memorable picks.",
+    };
+  }
+
+  return {
+    level: "official-selection",
+    title: "Official Selection",
+    message: "An eclectic festival that proudly follows its own vision.",
+  };
+}
+
 function Results() {
   const location = useLocation();
   const picks = location.state?.picks || [];
@@ -60,10 +116,12 @@ function Results() {
     100,
     (Math.log10(averagePopularity + 1) / Math.log10(1001)) * 100
   );
+const festivalScore = Math.round(
+  ratingScore * 0.9 + popularityScore * 0.1
+);
 
-  const festivalScore = Math.round(
-    ratingScore * 0.9 + popularityScore * 0.1
-  );
+const award = getFestivalAward(festivalScore);
+
 
   async function handleShare() {
     const shareText = `I built a ${festivalScore}/100 film festival on Best Film Festival. Can you beat my lineup?`;
@@ -92,9 +150,14 @@ function Results() {
       <section className="results-panel">
         <p className="eyebrow">Festival Complete</p>
         <h1>Your Festival Lineup</h1>
-        <div className="score-box">
-  <p className="score-label">Festival Score</p>
-  <h2>{festivalScore}/100</h2>
+       <div className={`festival-award festival-award--${award.level}`}>
+  <h2>{award.title}</h2>
+
+  <div className="award-score">
+    {festivalScore}<span>/100</span>
+  </div>
+
+  <p className="award-message">{award.message}</p>
 </div>
 
 <div className="score-explainer">

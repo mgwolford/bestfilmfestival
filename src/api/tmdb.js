@@ -2,8 +2,8 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-export function getPosterUrl(path) {
-  return path ? `${IMAGE_BASE_URL}${path}` : null;
+export function getPosterUrl(posterPath) {
+  return posterPath ? `${IMAGE_BASE_URL}${posterPath}` : null;
 }
 
 function shuffleMovies(movies) {
@@ -32,7 +32,7 @@ function buildDiscoverUrl({ genreId, startYear, endYear, page }) {
     sort_by: "vote_count.desc",
     "primary_release_date.gte": `${startYear}-01-01`,
     "primary_release_date.lte": `${endYear}-12-31`,
-    with_genres: genreId,
+    with_genres: String(genreId),
     "vote_count.gte": "100",
     page: String(page),
   });
@@ -41,11 +41,15 @@ function buildDiscoverUrl({ genreId, startYear, endYear, page }) {
 }
 
 async function fetchMoviePage(filters, page) {
-  const url = buildDiscoverUrl({ ...filters, page });
+  const url = buildDiscoverUrl({
+    ...filters,
+    page,
+  });
+
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error("Could not fetch movies from TMDb.");
+    throw new Error("Could not fetch movies from TMDB.");
   }
 
   return response.json();
@@ -56,6 +60,7 @@ export async function getMoviesByGenreAndDecade({
   startYear,
   endYear,
   excludeMovieIds = [],
+  mode = "casual",
 }) {
   const filters = {
     genreId,
@@ -65,19 +70,21 @@ export async function getMoviesByGenreAndDecade({
 
   const firstPage = await fetchMoviePage(filters, 1);
 
-  // Only use pages from TMDB's top four result pages.
-  const availablePages = Math.min(firstPage.total_pages || 1, 4);
+  const pageLimit = mode === "hardcore" ? 8 : 3;
+  const availablePages = Math.min(firstPage.total_pages || 1, pageLimit);
 
   const pageNumbers = Array.from(
     { length: availablePages },
     (_, index) => index + 1
   );
 
-  // Randomly choose 3 of the top four pages.
-  const randomPages = shuffleMovies(pageNumbers).slice(0, 3);
+  const pagesToFetch =
+    mode === "hardcore"
+      ? shuffleMovies(pageNumbers).slice(0, 3)
+      : pageNumbers;
 
   const pageResults = await Promise.all(
-    randomPages.map((page) =>
+    pagesToFetch.map((page) =>
       page === 1
         ? Promise.resolve(firstPage)
         : fetchMoviePage(filters, page)

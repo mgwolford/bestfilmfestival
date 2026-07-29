@@ -126,6 +126,65 @@ h2,
     font-size: clamp(1rem, 2vw, 1.2rem);
     line-height: 1.7;
   }
+
+  .mode-section {
+      border: 1px dashed #f5c46b;
+  }
+
+  .mode-selection {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px auto 16px;
+}
+
+.mode-button {
+  width: 190px;
+  padding: 14px;
+  color: #f8f1df;
+  background: rgba(15, 15, 15, 0.9);
+  border: 1px solid #6f6657;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.mode-button strong,
+.mode-button span {
+  display: block;
+}
+
+.mode-button span {
+  margin-top: 5px;
+  color: #c9c0ae;
+  font-size: 0.8rem;
+}
+
+.mode-button.selected {
+  color: #171717;
+  background: #f5c46b;
+  border-color: #f5c46b;
+  box-shadow: 0 0 18px rgba(245, 196, 107, 0.35);
+}
+
+.mode-button.selected span {
+  color: #443717;
+}
+
+.start-instruction {
+  margin-bottom: 14px;
+  color: #d8d0c1;
+}
+
+@media (max-width: 500px) {
+  .mode-selection {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mode-button {
+    width: min(100%, 280px);
+  }
+}
   
   .start-button,
   .share-btn {
@@ -431,10 +490,10 @@ h2,
     margin-top: 0;
   }
 
-  .score-box {
-    margin: 1.5rem auto;
+  .festival-award {
+    margin: 3rem auto;
     padding: 1.25rem;
-    max-width: 320px;
+    max-width: 400px;
     border: 2px solid rgba(255, 255, 255, 0.35);
     border-radius: 16px;
     background: rgba(0, 0, 0, 0.35);

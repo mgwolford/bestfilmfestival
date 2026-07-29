@@ -17,7 +17,8 @@ function Home() {
   const [picks, setPicks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [rerollsRemaining, setRerollsRemaining] = useState(2);
-  const offeredMovieIds = useRef(new Set());
+  const offeredMovieIdsRef = useRef(new Set());
+  const [gameMode, setGameMode] = useState("casual");
 
   const currentSlot = slots[currentSlotIndex];
 
@@ -30,7 +31,7 @@ function Home() {
     setSelectedMovie(null);
     setMovieOptions([]);
     setRerollsRemaining(2);
-    offeredMovieIds.current = new Set();
+    offeredMovieIdsRef.current = new Set();
     setGameStarted(true);
   }
 
@@ -42,13 +43,13 @@ function Home() {
       setSelectedMovie(null);
 
       try {
-        const movies = await getMoviesByGenreAndDecade({
-          genreId: currentSlot.genre.id,
-          startYear: currentSlot.decade.startYear,
-          endYear: currentSlot.decade.endYear,
-          excludeMovieIds: [...offeredMovieIds.current],
-        });
-
+const movies = await getMoviesByGenreAndDecade({
+  genreId: currentSlot.genre.id,
+  startYear: currentSlot.decade.startYear,
+  endYear: currentSlot.decade.endYear,
+  excludeMovieIds: offeredMovieIdsRef.current,
+  mode: gameMode,
+});
         const primaryGenreMovies = movies.filter(
           (movie) => movie.genre_ids?.[0] === currentSlot.genre.id
         );
@@ -74,7 +75,7 @@ function Home() {
         }
 
         moviesToShow.forEach((movie) =>
-          offeredMovieIds.current.add(movie.id)
+          offeredMovieIdsRef.current.add(movie.id)
         );
 
         setMovieOptions(moviesToShow);
@@ -160,7 +161,35 @@ function Home() {
               Can you create the best film festival?
             </p>
 
-            <button className="clapper-btn" onClick={beginFestival}>
+     <div className="mode-section">
+  <p className="mode-heading">Choose Your Mode</p>
+
+  <div className="mode-selection">
+    <button
+      type="button"
+      className={`mode-button ${
+        gameMode === "casual" ? "selected" : ""
+      }`}
+      onClick={() => setGameMode("casual")}
+    >
+      <strong>Casual</strong>
+      <span>Popular and recognizable films</span>
+    </button>
+
+    <button
+      type="button"
+      className={`mode-button ${
+        gameMode === "hardcore" ? "selected" : ""
+      }`}
+      onClick={() => setGameMode("hardcore")}
+    >
+      <strong>Hardcore</strong>
+      <span>More variety and deeper cuts</span>
+      </button>
+  </div>
+</div>
+
+<button className="clapper-btn" onClick={beginFestival}>
   <span className="clapper-top"></span>
 
   <span className="clapper-body">

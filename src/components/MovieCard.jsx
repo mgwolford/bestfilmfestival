@@ -1,4 +1,4 @@
-import { getPosterUrl } from "../api/tmdb";
+import { getPosterUrl } from "../api/tmdb.js";
 
 function MovieCard({ movie, isSelected, onSelect }) {
   const posterUrl = getPosterUrl(movie.poster_path);
