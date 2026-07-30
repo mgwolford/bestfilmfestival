@@ -1,0 +1,211 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+h1,
+h2 {
+  font-family: "Bebas Neue", sans-serif;
+  letter-spacing: 2px;
+}
+
+/* Results Page */
+.game-page {
+  min-height: 100vh;
+  padding: 40px 24px;
+  background:
+    radial-gradient(
+      circle at bottom left,
+      rgba(245, 196, 107, 0.16),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(245, 196, 107, 0.12),
+      transparent 32%
+    ),
+    #070707;
+  color: #f8f1df;
+}
+
+.results-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.results-panel h1 {
+  margin: 0;
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: #f5c46b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.festival-award {
+  max-width: 400px;
+  margin: 1rem auto;
+  padding: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.festival-award h2 {
+  margin: 1px;
+}
+
+.award-score {
+  margin: 0.25rem 0;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  line-height: 1;
+  color: #f5c46b;
+}
+
+.award-score span {
+  margin-left: 4px;
+  font-size: 0.35em;
+}
+
+.award-message {
+  margin-bottom: 0;
+  line-height: 1.6;
+  font-style:italic;
+}
+
+.score-explainer {
+  max-width: 650px;
+  margin: 1.5rem auto;
+}
+
+.score-explainer p {
+  line-height: 1.6;
+}
+
+.lineup-list {
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+  margin: 24px auto;
+}
+
+.lineup-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid #302a1d;
+  border-radius: 16px;
+  background: #171717;
+  text-align: left;
+}
+
+.lineup-card span {
+  color: #f5c46b;
+}
+
+.lineup-card strong {
+  color: #f8f1df;
+  text-align: end;
+}
+
+.lineup-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 760px;
+  margin: 16px auto 0;
+  padding: 18px;
+  border-top: 1px solid #f5c46b;
+  border-bottom: 1px solid #f5c46b;
+  color: #f5c46b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.lineup-score strong {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.lineup-score small {
+  margin-left: 3px;
+  font-size: 0.45em;
+}
+
+.results-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.start-button,
+.share-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border: 1px solid #f5c46b;
+  border-radius: 999px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.start-button {
+  background: #f5c46b;
+  color: #111;
+}
+
+.start-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(245, 196, 107, 0.35);
+  background: #ffd985;
+}
+
+.share-btn {
+  background: #000;
+  color: #f5c46b;
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(245, 196, 107, 0.35);
+  background: rgba(245, 196, 107, 0.12);
+  color: #ffd985;
+}
+
+@media (max-width: 600px) {
+  .game-page {
+    padding: 32px 16px;
+  }
+
+  .lineup-card {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .lineup-card strong {
+    text-align: left;
+  }
+}

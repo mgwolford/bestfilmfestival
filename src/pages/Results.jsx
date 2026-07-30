@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import "./Home.css";
+import "./Results.css";
 
 function getFestivalAward(score) {
   if (score === 100) {
@@ -116,32 +116,42 @@ function Results() {
     100,
     (Math.log10(averagePopularity + 1) / Math.log10(1001)) * 100
   );
-const festivalScore = Math.round(
-  ratingScore * 0.9 + popularityScore * 0.1
-);
+  const festivalScore = Math.round(
+    ratingScore * 0.9 + popularityScore * 0.1
+  );
 
-const award = getFestivalAward(festivalScore);
-
+  const award = getFestivalAward(festivalScore);
 
   async function handleShare() {
-    const shareText = `I built a ${festivalScore}/100 film festival on Best Film Festival. Can you beat my lineup?`;
     const shareUrl = "https://mgwolford.github.io/bestfilmfestival/";
+    const movieList = picks
+      .map((pick, index) => `${index + 1}. ${pick.movie.title}`)
+      .join("\n");
+
+    const shareText = `I scored ${festivalScore}/100 at Best Film Festival!
+
+My lineup:
+${movieList}
+
+Can you beat my festival?
+${shareUrl}`;
 
     const shareData = {
-      title: "Best Film Festival",
+      title: `My ${festivalScore}/100 Best Film Festival`,
       text: shareText,
-      url: shareUrl,
     };
 
     try {
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
-        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-        alert("Share text copied!");
+        await navigator.clipboard.writeText(shareText);
+        alert("Your festival results were copied. Paste them anywhere to share!");
       }
     } catch (error) {
-      console.log("Share canceled or failed", error);
+      if (error.name !== "AbortError") {
+        console.error("Share failed", error);
+      }
     }
   }
 
@@ -150,23 +160,27 @@ const award = getFestivalAward(festivalScore);
       <section className="results-panel">
         <p className="eyebrow">Festival Complete</p>
         <h1>Your Festival Lineup</h1>
-       <div className={`festival-award festival-award--${award.level}`}>
-  <h2>{award.title}</h2>
+        <div className={`festival-award festival-award--${award.level}`}>
+          <h2>{award.title}</h2>
 
-  <div className="award-score">
-    {festivalScore}<span>/100</span>
-  </div>
+          <div className="award-score">
+            {festivalScore}
+            <span>/100</span>
+          </div>
 
-  <p className="award-message">{award.message}</p>
-</div>
+          <p className="award-message">{award.message}</p>
+        </div>
 
-<div className="score-explainer">
-  <h3>How the judges scored your festival</h3>
+        <div className="score-explainer">
+          <h3>How the judges scored your festival</h3>
 
-  <p>
-  Our panel looked at the overall quality of your selections and how well they've resonated with audiences over time. A festival filled with acclaimed classics and beloved crowd-pleasers will earn the highest ratings.
-  </p>
-</div>
+          <p>
+            Our panel looked at the overall quality of your selections and how
+            well they've resonated with audiences over time. A festival filled
+            with acclaimed classics and beloved crowd-pleasers will earn the
+            highest ratings.
+          </p>
+        </div>
 
         <div className="lineup-list">
           {picks.map((pick) => (
@@ -180,6 +194,14 @@ const award = getFestivalAward(festivalScore);
               <strong>{pick.movie.title}</strong>
             </article>
           ))}
+        </div>
+
+        <div className="lineup-score" aria-label={`Festival Score: ${festivalScore} out of 100`}>
+          <span>Festival Score</span>
+          <strong>
+            {festivalScore}
+            <small>/100</small>
+          </strong>
         </div>
 
         <div className="results-actions">
