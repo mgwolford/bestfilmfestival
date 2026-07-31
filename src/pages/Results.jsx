@@ -122,197 +122,30 @@ function Results() {
 
   const award = getFestivalAward(festivalScore);
 
-  const shareUrl = "https://mgwolford.github.io/bestfilmfestival/";
-
-  function getShareText() {
+  async function handleShare() {
+    const shareUrl = "https://mgwolford.github.io/bestfilmfestival/";
     const movieList = picks
       .map((pick, index) => `${index + 1}. ${pick.movie.title}`)
       .join("\n");
 
-    return `I scored ${festivalScore}/100 at Best Film Festival!
+    const shareText = `I scored ${festivalScore}/100 at Best Film Festival!
 
 My lineup:
 ${movieList}
 
-Can you beat my festival?
+Think you can build a better film festival?
+
+Play at
 ${shareUrl}`;
-  }
 
-  function drawWrappedText(context, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(" ");
-    let line = "";
-    let currentY = y;
-
-    words.forEach((word) => {
-      const testLine = line ? `${line} ${word}` : word;
-
-      if (context.measureText(testLine).width > maxWidth && line) {
-        context.fillText(line, x, currentY);
-        line = word;
-        currentY += lineHeight;
-      } else {
-        line = testLine;
-      }
-    });
-
-    context.fillText(line, x, currentY);
-    return currentY;
-  }
-
-  async function createStoryImage() {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1080;
-    canvas.height = 1920;
-
-    const context = canvas.getContext("2d");
-    if (!context) {
-      throw new Error("Canvas is not supported in this browser.");
-    }
-
-    const background = context.createLinearGradient(0, 0, 0, canvas.height);
-    background.addColorStop(0, "#050505");
-    background.addColorStop(0.55, "#17130b");
-    background.addColorStop(1, "#050505");
-    context.fillStyle = background;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    context.strokeStyle = "#f5c46b";
-    context.lineWidth = 8;
-    context.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
-
-    context.textAlign = "center";
-    context.fillStyle = "#f5c46b";
-    context.font = "700 42px Arial";
-    context.fillText("BEST FILM FESTIVAL", canvas.width / 2, 155);
-
-    context.fillStyle = "#f8f1df";
-    context.font = "700 72px Arial";
-    context.fillText(award.title.toUpperCase(), canvas.width / 2, 255);
-
-    context.fillStyle = "#f5c46b";
-    context.font = "700 190px Arial";
-    context.fillText(`${festivalScore}`, canvas.width / 2, 475);
-
-    context.fillStyle = "#f8f1df";
-    context.font = "700 58px Arial";
-    context.fillText("/ 100", canvas.width / 2, 550);
-
-    context.strokeStyle = "rgba(245, 196, 107, 0.65)";
-    context.lineWidth = 3;
-    context.beginPath();
-    context.moveTo(140, 625);
-    context.lineTo(940, 625);
-    context.stroke();
-
-    context.fillStyle = "#f5c46b";
-    context.font = "700 40px Arial";
-    context.fillText("MY FESTIVAL LINEUP", canvas.width / 2, 705);
-
-    context.textAlign = "left";
-    let y = 765;
-
-    picks.forEach((pick, index) => {
-      context.fillStyle = "#f5c46b";
-      context.font = "700 26px Arial";
-      context.fillText(
-        `${index + 1}. ${pick.slot.genre.name.toUpperCase()} · ${pick.slot.decade.label}`,
-        115,
-        y
-      );
-
-      context.fillStyle = "#f8f1df";
-      context.font = "700 40px Arial";
-      const finalTitleY = drawWrappedText(
-        context,
-        pick.movie.title,
-        115,
-        y + 50,
-        850,
-        44
-      );
-
-      y = finalTitleY + 78;
-    });
-
-    context.textAlign = "center";
-    context.fillStyle = "#f8f1df";
-    context.font = "700 52px Arial";
-    context.fillText("CAN YOU BEAT MY FESTIVAL?", canvas.width / 2, 1720);
-
-    context.fillStyle = "#f5c46b";
-    context.font = "700 34px Arial";
-    context.fillText("mgwolford.github.io/bestfilmfestival", canvas.width / 2, 1795);
-
-    return new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          reject(new Error("The story image could not be created."));
-        }
-      }, "image/png");
-    });
-  }
-
-  function downloadStoryImage(file) {
-    const imageUrl = URL.createObjectURL(file);
-    const downloadLink = document.createElement("a");
-    downloadLink.href = imageUrl;
-    downloadLink.download = file.name;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    downloadLink.remove();
-    URL.revokeObjectURL(imageUrl);
-  }
-
-  async function handleStoryShare() {
-    const shareText = getShareText();
-
-    try {
-      const storyBlob = await createStoryImage();
-      const storyFile = new File(
-        [storyBlob],
-        `best-film-festival-${festivalScore}.png`,
-        { type: "image/png" }
-      );
-
-      const shareData = {
-        title: `My ${festivalScore}/100 Best Film Festival`,
-        text: `I scored ${festivalScore}/100. Can you beat my festival?`,
-        files: [storyFile],
-      };
-
-      if (
-        navigator.share &&
-        navigator.canShare &&
-        navigator.canShare({ files: [storyFile] })
-      ) {
-        await navigator.share(shareData);
-        return;
-      }
-
-      downloadStoryImage(storyFile);
-      await navigator.clipboard?.writeText(shareText);
-      alert(
-        "Your Story image was saved. Open Instagram, create a Story, and select the image from your photos."
-      );
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        console.error("Story share failed", error);
-        alert("The Story image could not be shared. Please try again.");
-      }
-    }
-  }
-
-  async function handleTextShare() {
-    const shareText = getShareText();
+    const shareData = {
+      title: `My ${festivalScore}/100 Best Film Festival`,
+      text: shareText,
+    };
 
     try {
       if (navigator.share) {
-        await navigator.share({
-          title: `My ${festivalScore}/100 Best Film Festival`,
-          text: shareText,
-        });
+        await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(shareText);
         alert("Your festival results were copied. Paste them anywhere to share!");
@@ -374,12 +207,8 @@ ${shareUrl}`;
         </div>
 
         <div className="results-actions">
-          <button className="share-btn" onClick={handleStoryShare}>
-            Share Story Image
-          </button>
-
-          <button className="share-btn" onClick={handleTextShare}>
-            Share Results as Text
+          <button className="share-btn" onClick={handleShare}>
+            Share Your Festival
           </button>
 
           <Link to="/" className="start-button">
