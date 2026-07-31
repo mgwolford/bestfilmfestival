@@ -238,7 +238,7 @@ ${shareUrl}`;
 
     context.textAlign = "center";
     context.fillStyle = "#f8f1df";
-    context.font = "700 52px Arial";
+    context.font = "700 36px Arial";
     context.fillText("THINK YOU CAN BUILD A BETTER FILM FESTIVAL?", canvas.width / 2, 1720);
 
     context.fillStyle = "#f5c46b";
