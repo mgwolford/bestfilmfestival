@@ -134,7 +134,9 @@ function Results() {
 My lineup:
 ${movieList}
 
-Can you beat my festival?
+Think you can build a better film festival?
+
+Play at
 ${shareUrl}`;
   }
 
@@ -237,7 +239,7 @@ ${shareUrl}`;
     context.textAlign = "center";
     context.fillStyle = "#f8f1df";
     context.font = "700 52px Arial";
-    context.fillText("CAN YOU BEAT MY FESTIVAL?", canvas.width / 2, 1720);
+    context.fillText("THINK YOU CAN BUILD A BETTER FILM FESTIVAL?", canvas.width / 2, 1720);
 
     context.fillStyle = "#f5c46b";
     context.font = "700 34px Arial";
@@ -278,7 +280,7 @@ ${shareUrl}`;
 
       const shareData = {
         title: `My ${festivalScore}/100 Best Film Festival`,
-        text: `I scored ${festivalScore}/100. Can you beat my festival? ${shareUrl}`,
+        text: `I scored ${festivalScore}/100. Think you can build a better film festival? Play at ${shareUrl}`,
         files: [storyFile],
       };
 
@@ -304,25 +306,7 @@ ${shareUrl}`;
     }
   }
 
-  async function handleTextShare() {
-    const shareText = getShareText();
 
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: `My ${festivalScore}/100 Best Film Festival`,
-          text: shareText,
-        });
-      } else {
-        await navigator.clipboard.writeText(shareText);
-        alert("Your festival results were copied. Paste them anywhere to share!");
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        console.error("Share failed", error);
-      }
-    }
-  }
 
   return (
     <main className="game-page">
@@ -375,7 +359,7 @@ ${shareUrl}`;
 
         <div className="results-actions">
           <button className="share-btn" onClick={handleStoryShare}>
-            Share Your Results
+            Share Story Image
           </button>
 
           <Link to="/" className="start-button">
