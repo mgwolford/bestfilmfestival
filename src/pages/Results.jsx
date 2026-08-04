@@ -122,7 +122,7 @@ function Results() {
 
   const award = getFestivalAward(festivalScore);
 
-  const shareUrl = "https://mgwolford.github.io/bestfilmfestival/";
+  const shareUrl = "https://www.best-film-festival.com/";
 
   function getShareText() {
     const movieList = picks
@@ -243,7 +243,7 @@ ${shareUrl}`;
 
     context.fillStyle = "#f5c46b";
     context.font = "700 34px Arial";
-    context.fillText("mgwolford.github.io/bestfilmfestival", canvas.width / 2, 1795);
+    context.fillText("www.best-film-festival.com", canvas.width / 2, 1795);
 
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
