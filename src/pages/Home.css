@@ -144,6 +144,7 @@ h2,
 
 .mode-selection {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
   margin: 24px auto 16px;
@@ -170,6 +171,15 @@ h2,
   font-size: 0.8rem;
 }
 
+.mode-button .mode-reroll-note {
+  margin-top: 9px;
+  color: #f5c46b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .mode-button.selected {
   border-color: #f5c46b;
   background: #f5c46b;
@@ -182,6 +192,47 @@ h2,
 
 .mode-button.selected span {
   color: #443717;
+}
+
+.mode-button.selected .mode-reroll-note {
+  color: #2b2415;
+}
+
+.daily-mode-button {
+  border-color: #b88a37;
+}
+
+.daily-challenge-preview {
+  max-width: 520px;
+  margin: 8px auto 20px;
+  padding: 14px 18px;
+  border: 1px solid rgba(245, 196, 107, 0.55);
+  border-radius: 10px;
+  background: rgba(245, 196, 107, 0.08);
+}
+
+.daily-challenge-preview span,
+.daily-challenge-banner span {
+  display: block;
+  color: #f5c46b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.daily-challenge-preview strong,
+.daily-challenge-banner strong {
+  display: block;
+  margin-top: 4px;
+  color: #f8f1df;
+  font-size: 1.15rem;
+}
+
+.daily-challenge-preview p {
+  margin: 5px 0 0;
+  color: #c9c0ae;
+  font-size: 0.85rem;
 }
 
 .start-instruction {
@@ -354,6 +405,54 @@ h2,
 
   .mode-button {
     width: min(100%, 280px);
+  }
+}
+
+@media (max-width: 415px) {
+  .hero-screen {
+    padding: 16px 12px;
+  }
+
+  .hero-content {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 28px 8px;
+    box-sizing: border-box;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2.7rem, 15vw, 3.8rem);
+    line-height: 0.95;
+  }
+
+  .mode-section,
+  .daily-challenge-preview {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mode-section {
+    padding-inline: 10px;
+  }
+
+  .mode-button {
+    width: 100%;
+    max-width: 280px;
+    box-sizing: border-box;
+  }
+
+  .clapper-btn {
+    width: 100%;
+    max-width: 300px;
+    align-items: center;
+  }
+
+  .clapper-top,
+  .clapper-body {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -539,4 +638,13 @@ h2,
 .reroll-button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.daily-challenge-banner {
+  width: fit-content;
+  margin: 0 auto 22px;
+  padding: 10px 22px;
+  border: 1px solid rgba(245, 196, 107, 0.55);
+  border-radius: 999px;
+  background: rgba(245, 196, 107, 0.08);
 }

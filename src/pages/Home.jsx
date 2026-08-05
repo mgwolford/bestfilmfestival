@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMoviesByGenreAndDecade } from "../api/tmdb";
-import { getRandomFestivalSlots } from "../data/festivalCategories";
+import {
+  getDailyChallenge,
+  getRandomFestivalSlots,
+} from "../data/festivalCategories";
 import MovieCard from "../components/MovieCard";
 import tmdbLogo from "../assets/tmdb-logo.svg";
 import "./Home.css";
@@ -19,18 +22,22 @@ function Home() {
   const [rerollsRemaining, setRerollsRemaining] = useState(2);
   const offeredMovieIdsRef = useRef(new Set());
   const [gameMode, setGameMode] = useState("casual");
+  const dailyChallenge = getDailyChallenge();
 
   const currentSlot = slots[currentSlotIndex];
 
   function beginFestival() {
-    const newSlots = getRandomFestivalSlots();
+    const newSlots =
+      gameMode === "daily"
+        ? dailyChallenge.slots
+        : getRandomFestivalSlots();
 
     setSlots(newSlots);
     setCurrentSlotIndex(0);
     setPicks([]);
     setSelectedMovie(null);
     setMovieOptions([]);
-    setRerollsRemaining(2);
+    setRerollsRemaining(gameMode === "daily" ? 0 : 2);
     offeredMovieIdsRef.current = new Set();
     setGameStarted(true);
   }
@@ -48,7 +55,7 @@ const movies = await getMoviesByGenreAndDecade({
   startYear: currentSlot.decade.startYear,
   endYear: currentSlot.decade.endYear,
   excludeMovieIds: offeredMovieIdsRef.current,
-  mode: gameMode,
+  mode: gameMode === "hardcore" ? "hardcore" : "casual",
 });
         const primaryGenreMovies = movies.filter(
           (movie) => movie.genre_ids?.[0] === currentSlot.genre.id
@@ -88,7 +95,7 @@ const movies = await getMoviesByGenreAndDecade({
     }
 
     loadMovies();
-  }, [gameStarted, currentSlot]);
+  }, [gameStarted, currentSlot, gameMode]);
 
   function confirmPick() {
     if (!selectedMovie) return;
@@ -104,10 +111,12 @@ const movies = await getMoviesByGenreAndDecade({
     if (currentSlotIndex < slots.length - 1) {
       setCurrentSlotIndex(currentSlotIndex + 1);
     } else {
-      navigate("/results", {
-        state: {
-          picks: updatedPicks,
-        },
+    navigate("/results", {
+      state: {
+        picks: updatedPicks,
+        gameMode,
+        dailyChallenge: gameMode === "daily" ? dailyChallenge : null,
+      },
       });
     }
 
@@ -151,8 +160,7 @@ const movies = await getMoviesByGenreAndDecade({
             <h1>Best Film Festival</h1>
 
             <p className="intro-text">
-              Select the greatest films across 11 genres and decades dating
-              back to the 1970s. With every choice, you'll build a one-of-a-kind
+              Select the greatest films spanning 6 decades dating back to the 1970's and across 11 genres. With every choice, you'll build a one-of-a-kind
               film festival and discover how your lineup stacks up against the
               best.
             </p>
@@ -174,6 +182,7 @@ const movies = await getMoviesByGenreAndDecade({
     >
       <strong>Casual</strong>
       <span>Popular and recognizable films</span>
+      <span className="mode-reroll-note">Includes 2 rerolls</span>
     </button>
 
     <button
@@ -185,8 +194,29 @@ const movies = await getMoviesByGenreAndDecade({
     >
       <strong>Hardcore</strong>
       <span>More variety and deeper cuts</span>
-      </button>
+      <span className="mode-reroll-note">Includes 2 rerolls</span>
+    </button>
+
+    <button
+      type="button"
+      className={`mode-button daily-mode-button ${
+        gameMode === "daily" ? "selected" : ""
+      }`}
+      onClick={() => setGameMode("daily")}
+    >
+      <strong>Daily Challenge</strong>
+      <span>A new shared theme every day</span>
+      <span className="mode-reroll-note">No rerolls</span>
+    </button>
   </div>
+
+  {gameMode === "daily" && (
+    <div className="daily-challenge-preview">
+      <span>Today's Challenge</span>
+      <strong>{dailyChallenge.title}</strong>
+      <p>{dailyChallenge.description}</p>
+    </div>
+  )}
 </div>
 
 <button className="clapper-btn" onClick={beginFestival}>
@@ -229,12 +259,21 @@ const movies = await getMoviesByGenreAndDecade({
   return (
     <main className="game-page">
       <section className="festival-stage">
+        {gameMode === "daily" && (
+          <div className="daily-challenge-banner">
+            <span>Today's Challenge</span>
+            <strong>{dailyChallenge.title}</strong>
+          </div>
+        )}
+
         <div className="festival-status">
           <span>
             Screening {currentSlotIndex + 1} of {slots.length}
           </span>
 
-          <span>🎟 Rerolls Remaining: {rerollsRemaining}</span>
+          {gameMode !== "daily" && (
+            <span>🎟 Rerolls Remaining: {rerollsRemaining}</span>
+          )}
         </div>
 
         <h1>
@@ -245,7 +284,7 @@ const movies = await getMoviesByGenreAndDecade({
           Pick the movie that deserves a spot in your festival lineup.
         </p>
 
-        <div className="reroll-container">
+        {gameMode !== "daily" && <div className="reroll-container">
           <button
             className="reroll-button"
             onClick={rerollCurrentSlot}
@@ -253,7 +292,7 @@ const movies = await getMoviesByGenreAndDecade({
           >
             🎟 Reroll
           </button>
-        </div>
+        </div>}
 
         {loading ? (
           <p className="loading-text">Loading movie options...</p>

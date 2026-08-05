@@ -68,28 +68,28 @@ export async function getMoviesByGenreAndDecade({
     endYear,
   };
 
-  const firstPage = await fetchMoviePage(filters, 1);
+const firstPage = await fetchMoviePage(filters, 1);
 
-  const pageLimit = mode === "hardcore" ? 8 : 3;
-  const availablePages = Math.min(firstPage.total_pages || 1, pageLimit);
+const pageLimit = mode === "hardcore" ? 8 : 4;
+const availablePages = Math.min(firstPage.total_pages || 1, pageLimit);
 
-  const pageNumbers = Array.from(
-    { length: availablePages },
-    (_, index) => index + 1
-  );
+const pageNumbers = Array.from(
+  { length: availablePages },
+  (_, index) => index + 1
+);
 
-  const pagesToFetch =
-    mode === "hardcore"
-      ? shuffleMovies(pageNumbers).slice(0, 3)
-      : pageNumbers;
+const pagesToFetch =
+  mode === "hardcore"
+    ? shuffleMovies(pageNumbers.filter((page) => page !== 1)).slice(0, 3)
+    : pageNumbers;
 
-  const pageResults = await Promise.all(
-    pagesToFetch.map((page) =>
-      page === 1
-        ? Promise.resolve(firstPage)
-        : fetchMoviePage(filters, page)
-    )
-  );
+const pageResults = await Promise.all(
+  pagesToFetch.map((page) =>
+    page === 1
+      ? Promise.resolve(firstPage)
+      : fetchMoviePage(filters, page)
+  )
+);
 
   const excludedIds = new Set(excludeMovieIds);
   const uniqueMovies = new Map();

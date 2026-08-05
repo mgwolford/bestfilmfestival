@@ -66,6 +66,10 @@ h2 {
 }
 
 .award-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
   margin: 0.25rem 0;
   font-family: "Bebas Neue", sans-serif;
   font-size: clamp(3rem, 10vw, 5.5rem);
@@ -73,7 +77,19 @@ h2 {
   color: #f5c46b;
 }
 
-.award-score span {
+.award-score img {
+  width: clamp(46px, 9vw, 72px);
+  height: clamp(64px, 13vw, 100px);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.award-score__number {
+  display: flex;
+  align-items: baseline;
+}
+
+.award-score__number span {
   margin-left: 4px;
   font-size: 0.35em;
 }

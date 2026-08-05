@@ -1,5 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Results.css";
+import bronzeAward from "../assets/score-awards/bronze-award.png";
+import silverAward from "../assets/score-awards/silver-award.png";
+import goldAward from "../assets/score-awards/gold-award.png";
+
+function getScoreStatue(score) {
+  if (score >= 90) {
+    return { src: goldAward, label: "Gold festival award" };
+  }
+
+  if (score >= 80) {
+    return { src: silverAward, label: "Silver festival award" };
+  }
+
+  return { src: bronzeAward, label: "Bronze festival award" };
+}
 
 function getFestivalAward(score) {
   if (score === 100) {
@@ -121,6 +136,7 @@ function Results() {
   );
 
   const award = getFestivalAward(festivalScore);
+  const scoreStatue = getScoreStatue(festivalScore);
 
   const shareUrl = "https://www.best-film-festival.com/";
 
@@ -316,9 +332,16 @@ ${shareUrl}`;
         <div className={`festival-award festival-award--${award.level}`}>
           <h2>{award.title}</h2>
 
-          <div className="award-score">
-            {festivalScore}
-            <span>/100</span>
+          <div
+            className="award-score"
+            aria-label={`${festivalScore} out of 100, ${scoreStatue.label}`}
+          >
+            <img src={scoreStatue.src} alt="" aria-hidden="true" />
+
+            <div className="award-score__number">
+              {festivalScore}
+              <span>/100</span>
+            </div>
           </div>
 
           <p className="award-message">{award.message}</p>
