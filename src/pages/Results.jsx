@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Results.css";
 import bronzeAward from "../assets/score-awards/bronze-award.png";
@@ -75,6 +76,10 @@ function getFestivalAward(score) {
 function Results() {
   const location = useLocation();
   const picks = location.state?.picks || [];
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, []);
 
   if (picks.length === 0) {
     return (
@@ -382,7 +387,7 @@ ${shareUrl}`;
 
         <div className="results-actions">
           <button className="share-btn" onClick={handleStoryShare}>
-            Share Story Image
+            Share Results
           </button>
 
           <Link to="/" className="start-button">
