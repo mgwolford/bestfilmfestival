@@ -12,7 +12,7 @@ https://mgwolford.github.io/bestfilmfestival/
 
 Build a six-film festival across randomized genres and decades
 
-Choose between Casual and Hardcore game modes
+Choose between Casual, Hardcore game modes or the Daily Challenge
 
 Browse eight movie options during each round
 
@@ -35,6 +35,10 @@ Casual Mode draws from more familiar and popular movies, making it easier to rec
 ## Hardcore Mode
 
 Hardcore Mode searches a wider selection of films. It offers more variety, less predictable choices, and a tougher challenge for dedicated movie fans.
+
+## Daily Challenge
+
+A daily randomized challenge. The challenge changes between the user picking just 1 genre or 1 decade for their six films. Example: Pick the best films of 1990's or Pick the best Animation films through the decades. No rerolls allow to allow all users to see the same challenge details.
 
 # How It Works
 

@@ -301,7 +301,8 @@ ${shareUrl}`;
 
       const shareData = {
         title: `My ${festivalScore}/100 Best Film Festival`,
-        text: `I scored ${festivalScore}/100. Think you can build a better film festival? Play at ${shareUrl}`,
+        text: `I scored ${festivalScore}/100. Think you can build a better film festival?`,
+        url: shareUrl,
         files: [storyFile],
       };
 
@@ -310,6 +311,12 @@ ${shareUrl}`;
         navigator.canShare &&
         navigator.canShare({ files: [storyFile] })
       ) {
+        try {
+          await navigator.clipboard?.writeText(shareUrl);
+        } catch (clipboardError) {
+          console.warn("Could not copy the festival link", clipboardError);
+        }
+
         await navigator.share(shareData);
         return;
       }
@@ -317,7 +324,7 @@ ${shareUrl}`;
       downloadStoryImage(storyFile);
       await navigator.clipboard?.writeText(shareText);
       alert(
-        "Your Story image was saved. Open Instagram, create a Story, and select the image from your photos."
+        "Your Story image was saved and the festival link was copied. In Instagram, add a Link sticker and paste the copied link."
       );
     } catch (error) {
       if (error.name !== "AbortError") {
