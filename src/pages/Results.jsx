@@ -336,6 +336,18 @@ ${shareUrl}`;
 
 
 
+  async function handleCopyStoryLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert(
+        "Festival link copied. In Instagram Stories, add a Link sticker and paste it."
+      );
+    } catch (error) {
+      console.error("Could not copy Story link", error);
+      alert(`Copy this link for your Instagram Story: ${shareUrl}`);
+    }
+  }
+
   return (
     <main className="game-page">
       <section className="results-panel">
@@ -395,6 +407,10 @@ ${shareUrl}`;
         <div className="results-actions">
           <button className="share-btn" onClick={handleStoryShare}>
             Share Results
+          </button>
+
+          <button className="share-btn" onClick={handleCopyStoryLink}>
+            Copy Story Link
           </button>
 
           <Link to="/" className="start-button">
