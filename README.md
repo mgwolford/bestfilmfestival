@@ -6,7 +6,7 @@ Each round presents a new category, eight movie options, and one important choic
 
 ## Live Site
 
-https://mgwolford.github.io/bestfilmfestival/
+https://best-film-festival.com
 
 ## Features
 

@@ -4,7 +4,7 @@ import Results from "./pages/Results";
 
 function App() {
   return (
-    <BrowserRouter basename="/bestfilmfestival">
+  <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/results" element={<Results />} />
