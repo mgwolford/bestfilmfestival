@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getMoviesByGenreAndDecade } from "../api/tmdb";
 import {
   getDailyChallenge,
   getRandomFestivalSlots,
 } from "../data/festivalCategories";
 import MovieCard from "../components/MovieCard";
+import Results from "./Results";
 import tmdbLogo from "../assets/tmdb-logo.svg";
 import "./Home.css";
 
 function Home() {
-  const navigate = useNavigate();
-
   const [gameStarted, setGameStarted] = useState(false);
   const [slots, setSlots] = useState([]);
   const [currentSlotIndex, setCurrentSlotIndex] = useState(0);
@@ -20,6 +18,7 @@ function Home() {
   const [picks, setPicks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [rerollsRemaining, setRerollsRemaining] = useState(2);
+  const [showResults, setShowResults] = useState(false);
   const offeredMovieIdsRef = useRef(new Set());
   const [gameMode, setGameMode] = useState("casual");
   const dailyChallenge = getDailyChallenge();
@@ -39,6 +38,7 @@ function Home() {
     setMovieOptions([]);
     setRerollsRemaining(gameMode === "daily" ? 0 : 2);
     offeredMovieIdsRef.current = new Set();
+    setShowResults(false);
     setGameStarted(true);
   }
 
@@ -111,13 +111,7 @@ const movies = await getMoviesByGenreAndDecade({
     if (currentSlotIndex < slots.length - 1) {
       setCurrentSlotIndex(currentSlotIndex + 1);
     } else {
-    navigate("/results", {
-      state: {
-        picks: updatedPicks,
-        gameMode,
-        dailyChallenge: gameMode === "daily" ? dailyChallenge : null,
-      },
-      });
+      setShowResults(true);
     }
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -146,6 +140,18 @@ const movies = await getMoviesByGenreAndDecade({
     setSlots(updatedSlots);
     setSelectedMovie(null);
     setRerollsRemaining((current) => current - 1);
+  }
+
+  if (showResults) {
+    return (
+      <Results
+        picks={picks}
+        onBuildAnother={() => {
+          setShowResults(false);
+          setGameStarted(false);
+        }}
+      />
+    );
   }
 
   if (!gameStarted) {

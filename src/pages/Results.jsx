@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
 import "./Results.css";
 import bronzeAward from "../assets/score-awards/bronze-award.png";
 import silverAward from "../assets/score-awards/silver-award.png";
@@ -73,28 +72,11 @@ function getFestivalAward(score) {
   };
 }
 
-function Results() {
-  const location = useLocation();
-  const picks = location.state?.picks || [];
+function Results({ picks = [], onBuildAnother }) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, []);
-
-  if (picks.length === 0) {
-    return (
-      <main className="game-page">
-        <section className="results-panel">
-          <h1>No Festival Found</h1>
-          <p>Start a new festival to build your lineup.</p>
-
-          <Link to="/" className="start-button">
-            Start Festival
-          </Link>
-        </section>
-      </main>
-    );
-  }
 
   const averageRating =
     picks.reduce((sum, pick) => sum + pick.movie.vote_average, 0) /
@@ -336,17 +318,6 @@ ${shareUrl}`;
 
 
 
-  async function handleCopyStoryLink() {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      alert(
-        "Festival link copied. In Instagram Stories, add a Link sticker and paste it."
-      );
-    } catch (error) {
-      console.error("Could not copy Story link", error);
-      alert(`Copy this link for your Instagram Story: ${shareUrl}`);
-    }
-  }
 
   return (
     <main className="game-page">
@@ -409,13 +380,9 @@ ${shareUrl}`;
             Share Results
           </button>
 
-          <button className="share-btn" onClick={handleCopyStoryLink}>
-            Copy Story Link
-          </button>
-
-          <Link to="/" className="start-button">
+          <button className="start-button" onClick={onBuildAnother}>
             Build Another Festival
-          </Link>
+          </button>
         </div>
       </section>
     </main>
